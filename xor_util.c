@@ -29,7 +29,13 @@ int main(int argc , char *argv[])
 	{	
 		keyfile = argv[2];
 	}
-	
+
+	if ( strcmp("", argv[3]) == 0 )
+        {
+                printf("Input data is empty\n");
+                exit(EXIT_FAILURE);
+        }
+
 	/* Read the key file from input file */
 
 	keyfileptr = fopen(keyfile,"rb");
