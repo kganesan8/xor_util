@@ -1,8 +1,8 @@
 #include "xor_tool.h"
 
-void xor_encrypt(unsigned char *key, unsigned char *data, int *datalen, int keylen, int shift)
+void xor_encrypt(unsigned char *key, unsigned char *data, int *datalen, int keylen, int size_delta, int shift)
 {
-        int i,j;
+        int i,j,size_rem;
         unsigned int keyvalue;
 	char temp;
 
@@ -17,6 +17,23 @@ void xor_encrypt(unsigned char *key, unsigned char *data, int *datalen, int keyl
                 printf("The input data pointer is null");
                 exit(EXIT_FAILURE);
         }
+	
+	if ( datalen == NULL)
+        {
+                printf("The input data length pointer is null");
+                exit(EXIT_FAILURE);
+        }
+	else
+	{
+                if ( *datalen > keylen)
+		{
+			size_rem = (*datalen % keylen);
+		}
+		else
+		{
+			size_rem = *datalen;
+		}
+	}
 
         for( i = 0; i < *datalen; i++ )
         {
@@ -28,38 +45,31 @@ void xor_encrypt(unsigned char *key, unsigned char *data, int *datalen, int keyl
 		
 		if ( *datalen < keylen)
 		{
+			memmove((data+i+size_delta), data+i,size_rem);
+			memset(data+i, 0, size_delta);
+			*datalen += size_delta;
+
 			for ( j = 0; j < keylen; j++ )
 			{
-				if ( j == (keylen-1))
-				{
-                			data[j] = data[j]^key[j%keylen];
-				}
-				else
-				{
-					temp = data[j];
-                                        data[j] = 0x00;
-                                        data[j] = data[j]^key[j%keylen];
-                                        data[j+1] = temp;
-                                        *datalen += 1;
+                		data[j] = data[j]^key[j%keylen];
 					
-				}
 			}
 			break;
 		}
 		else
 		{
-			if ( (*datalen % keylen) != 0 )
+			if ( size_rem != 0 )
 			{
-				if ( i == ( *datalen - ( *datalen % keylen) ) )
+				if ( i == ( *datalen - size_rem ) )
 				{
 					
-					memmove(data+i+(keylen-(*datalen % keylen)), data+i,(*datalen % keylen));
-		 			memset(data+i, 0, (keylen-(*datalen % keylen)));
-					*datalen += (keylen-(*datalen % keylen));
+					memmove((data+i+size_delta), data+i,size_rem);
+		 			memset(data+i, 0, size_delta);
+					*datalen += size_delta;
 			
 					for ( j = 0; j < keylen; j++ )
                         		{
-                                        		data[i+j] = data[i+j]^key[j%keylen];
+                                        	data[i+j] = data[i+j]^key[j%keylen];
 
                                 	}
 

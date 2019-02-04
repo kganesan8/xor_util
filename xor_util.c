@@ -78,7 +78,7 @@ int main(int argc , char *argv[])
 
         while (!feof(keyfileptr)) 
 	{
-        	fscanf(keyfileptr,"%c",&key[count++]);
+	       	fscanf(keyfileptr,"%c",&key[count++]);
 	}
  
 	key[keysize] = '\0';
@@ -92,6 +92,7 @@ int main(int argc , char *argv[])
 	if ( (datasize % keysize) == 0)
 	{
         	data = (unsigned char*) malloc(sizeof(unsigned char)*(datasize+1));
+		size_delta = 0;
 	}
 	else
 	{
@@ -119,7 +120,7 @@ int main(int argc , char *argv[])
 	}
 	
 	/* Call encrypt with rotate shift value 1*/
-	xor_encrypt(key, data, &datasize, keysize, 1);
+	xor_encrypt(key, data, &datasize, keysize, size_delta, 1);
 
 	printf("Encrypted output data: ");
 

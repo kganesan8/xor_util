@@ -3,7 +3,7 @@
 #include<string.h>
 
 /* Function to encrypt the data block with key data by xor */
-void xor_encrypt(unsigned char *key, unsigned char *data, int *datalen, int keylen, int shift);
+void xor_encrypt(unsigned char *key, unsigned char *data, int *datalen, int keylen, int size_delta, int shift);
 
 /* Function to get bitmask based on shift value passed */
 int get_ls_mask(int shift);
